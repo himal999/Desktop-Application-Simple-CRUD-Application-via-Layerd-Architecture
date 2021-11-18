@@ -1,0 +1,22 @@
+use vehicale_management_system;
+
+create table if not exists vehicale(
+v_no VARCHAR(255) PRIMARY KEY,
+v_type VARCHAR(10) NOT NULL,
+v_km INT(255)NOT NULL,
+v_aCount INT(3)NOT NULL DEFAULT 0,
+v_noOfWheel INT(3)NOT NULL
+);
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS licen_details(
+v_no VARCHAR(255) primary key,
+in_date DATE,
+li_date DATE,
+ec_date DATE,
+se_date DATE,
+CONSTRAINT FOREIGN KEY(v_no)REFERENCES vehicale(v_no) ON UPDATE CASCADE ON DELETE CASCADE
+);

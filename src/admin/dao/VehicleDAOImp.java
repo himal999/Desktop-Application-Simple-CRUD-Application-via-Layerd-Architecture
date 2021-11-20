@@ -15,8 +15,8 @@ public class VehicleDAOImp implements VehicleDAO {
     }
 
     @Override
-    public boolean updateVehicle(Vehicle vehicle) {
-        return false;
+    public boolean updateVehicle(Vehicle vehicle) throws SQLException, ClassNotFoundException {
+       return CrudUtil.getExecuteUpdate("UPDATE vehicale SET v_type=?,v_km=?,v_aCount=?,v_noOfWheel=? WHERE v_no=?",vehicle.getVehicleType(),vehicle.getVehicleKm(),vehicle.getAccidentCount(),vehicle.getNoOfWheel(),vehicle.getVehicleNo());
     }
 
     @Override
@@ -38,5 +38,15 @@ public class VehicleDAOImp implements VehicleDAO {
          ));
      }
         return vehicles;
+    }
+
+    @Override
+    public Vehicle getVehicle(String id) throws SQLException, ClassNotFoundException {
+        Vehicle vehicle=null;
+        ResultSet rst =  CrudUtil.getExecuteQuery("SELECT * FROM vehicale WHERE v_no=?",id);
+        if(rst.next()){
+            vehicle = new Vehicle(rst.getString("v_no"),rst.getString("v_type"),rst.getInt("v_km"),rst.getInt("v_aCount"),rst.getInt("v_noOfWheel"));
+        }
+        return vehicle;
     }
 }

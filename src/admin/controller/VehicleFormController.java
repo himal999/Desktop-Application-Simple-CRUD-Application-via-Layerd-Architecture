@@ -63,6 +63,8 @@ public class VehicleFormController {
         txtRunning.setDisable(false);
         txtAccidentCount.setDisable(false);
         loadUI();
+        clearField();
+
     }
 
     public void changeItSelfOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
@@ -85,8 +87,34 @@ public class VehicleFormController {
                 new Alert(Alert.AlertType.ERROR, "Try Again").show();
                 return;
             }
-        } else {
+        } else if(btnDynamic.getText().equalsIgnoreCase("Update")){
+           Vehicle vehicle =  vehicleBO.getVehicle(txtVehicleNo.getText());
+                if(vehicle.getVehicleType().equalsIgnoreCase(cmbVehicleType.getSelectionModel().selectedItemProperty().getName()) && String.valueOf(vehicle.getAccidentCount()).equalsIgnoreCase(txtAccidentCount.getText()) && String.valueOf(vehicle.getNoOfWheel()).equalsIgnoreCase(txtNoOfWheels.getText()) && String.valueOf(vehicle.getVehicleKm()).equalsIgnoreCase(txtRunning.getText())){
+                    new Alert(Alert.AlertType.ERROR,"Please Enter New Value Data").show();
+                    btnDynamic.setDisable(true);
+                    return;
+                }else{
+                    Vehicle tempVehicle = new Vehicle(
+                            vehicle.getVehicleNo(),
+                            cmbVehicleType.getValue().toString(),
+                            Integer.parseInt(txtRunning.getText()),
+                            Integer.parseInt(txtAccidentCount.getText()),
+                            Integer.parseInt(txtNoOfWheels.getText())
+                    );
 
+                    if(vehicleBO.updateVehicle(tempVehicle)){
+                        clearField();
+                        loadTable();
+                        cmbVehicleType.getSelectionModel().clearSelection();
+                        btnDynamic.setDisable(true);
+                        tblVehicle.getSelectionModel().clearSelection();
+                        new Alert(Alert.AlertType.CONFIRMATION,"Update Success").show();
+                        return;
+                    }else{
+                        new Alert(Alert.AlertType.ERROR,"Try Again").show();
+                        return;
+                    }
+                }
         }
     }
 
@@ -119,6 +147,7 @@ public class VehicleFormController {
                 txtRunning.setText(String.valueOf(vehicle.getVehicleKm()));
                 txtNoOfWheels.setDisable(false);
                 txtNoOfWheels.setText(String.valueOf(vehicle.getNoOfWheel()));
+                loadUI();
             });
         }
     }

@@ -18,8 +18,9 @@ public class VehicleBOImp implements VehicleBO{
     }
 
     @Override
-    public boolean updateVehicle(Vehicle vehicle) {
-        return false;
+    public boolean updateVehicle(Vehicle vehicle) throws SQLException, ClassNotFoundException {
+       return vehicleDAO.updateVehicle(vehicle);
+
     }
 
     @Override
@@ -30,5 +31,10 @@ public class VehicleBOImp implements VehicleBO{
     @Override
     public ArrayList<Vehicle> getAllVehicle() throws SQLException, ClassNotFoundException {
        return vehicleDAO.getAllVehicle();
+    }
+
+    @Override
+    public Vehicle getVehicle(String id) throws SQLException, ClassNotFoundException {
+        return vehicleDAO.getVehicle(id);
     }
 }

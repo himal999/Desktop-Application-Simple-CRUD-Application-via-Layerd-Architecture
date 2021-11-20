@@ -10,15 +10,13 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
-import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 public class VehicleFormController {
@@ -87,34 +85,34 @@ public class VehicleFormController {
                 new Alert(Alert.AlertType.ERROR, "Try Again").show();
                 return;
             }
-        } else if(btnDynamic.getText().equalsIgnoreCase("Update")){
-           Vehicle vehicle =  vehicleBO.getVehicle(txtVehicleNo.getText());
-                if(vehicle.getVehicleType().equalsIgnoreCase(cmbVehicleType.getSelectionModel().selectedItemProperty().getName()) && String.valueOf(vehicle.getAccidentCount()).equalsIgnoreCase(txtAccidentCount.getText()) && String.valueOf(vehicle.getNoOfWheel()).equalsIgnoreCase(txtNoOfWheels.getText()) && String.valueOf(vehicle.getVehicleKm()).equalsIgnoreCase(txtRunning.getText())){
-                    new Alert(Alert.AlertType.ERROR,"Please Enter New Value Data").show();
-                    btnDynamic.setDisable(true);
-                    return;
-                }else{
-                    Vehicle tempVehicle = new Vehicle(
-                            vehicle.getVehicleNo(),
-                            cmbVehicleType.getValue().toString(),
-                            Integer.parseInt(txtRunning.getText()),
-                            Integer.parseInt(txtAccidentCount.getText()),
-                            Integer.parseInt(txtNoOfWheels.getText())
-                    );
+        } else if (btnDynamic.getText().equalsIgnoreCase("Update")) {
+            Vehicle vehicle = vehicleBO.getVehicle(txtVehicleNo.getText());
+            if (vehicle.getVehicleType().equalsIgnoreCase(cmbVehicleType.getSelectionModel().selectedItemProperty().getName()) && String.valueOf(vehicle.getAccidentCount()).equalsIgnoreCase(txtAccidentCount.getText()) && String.valueOf(vehicle.getNoOfWheel()).equalsIgnoreCase(txtNoOfWheels.getText()) && String.valueOf(vehicle.getVehicleKm()).equalsIgnoreCase(txtRunning.getText())) {
+                new Alert(Alert.AlertType.ERROR, "Please Enter New Value Data").show();
+                btnDynamic.setDisable(true);
+                return;
+            } else {
+                Vehicle tempVehicle = new Vehicle(
+                        vehicle.getVehicleNo(),
+                        cmbVehicleType.getValue().toString(),
+                        Integer.parseInt(txtRunning.getText()),
+                        Integer.parseInt(txtAccidentCount.getText()),
+                        Integer.parseInt(txtNoOfWheels.getText())
+                );
 
-                    if(vehicleBO.updateVehicle(tempVehicle)){
-                        clearField();
-                        loadTable();
-                        cmbVehicleType.getSelectionModel().clearSelection();
-                        btnDynamic.setDisable(true);
-                        tblVehicle.getSelectionModel().clearSelection();
-                        new Alert(Alert.AlertType.CONFIRMATION,"Update Success").show();
-                        return;
-                    }else{
-                        new Alert(Alert.AlertType.ERROR,"Try Again").show();
-                        return;
-                    }
+                if (vehicleBO.updateVehicle(tempVehicle)) {
+                    clearField();
+                    loadTable();
+                    cmbVehicleType.getSelectionModel().clearSelection();
+                    btnDynamic.setDisable(true);
+                    tblVehicle.getSelectionModel().clearSelection();
+                    new Alert(Alert.AlertType.CONFIRMATION, "Update Success").show();
+                    return;
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "Try Again").show();
+                    return;
                 }
+            }
         }
     }
 
@@ -130,8 +128,8 @@ public class VehicleFormController {
         for (Vehicle vehicle : vehicles) {
             Button update = new Button("Update");
             Button delete = new Button("Delete");
-            HBox hbox = new HBox(update,delete);
-            tblVehicle.getItems().add(new VehicleTM(vehicle.getVehicleNo(), vehicle.getVehicleType(), vehicle.getNoOfWheel(), vehicle.getAccidentCount(), vehicle.getVehicleKm(),hbox));
+            HBox hbox = new HBox(update, delete);
+            tblVehicle.getItems().add(new VehicleTM(vehicle.getVehicleNo(), vehicle.getVehicleType(), vehicle.getNoOfWheel(), vehicle.getAccidentCount(), vehicle.getVehicleKm(), hbox));
 
             update.setOnAction(event -> {
                 btnDynamic.setDisable(false);
@@ -149,10 +147,36 @@ public class VehicleFormController {
                 txtNoOfWheels.setText(String.valueOf(vehicle.getNoOfWheel()));
                 loadUI();
             });
+
+            delete.setOnAction(event -> {
+                ButtonType yes = new ButtonType("Sure", ButtonBar.ButtonData.OK_DONE);
+                ButtonType no = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you Sure Drop Data", yes, no).showAndWait();
+                if (result.orElse(no) == yes) {
+                    try {
+                        if (vehicleBO.deleteVehicle(vehicle.getVehicleNo())) {
+                            try {
+                                loadTable();
+                                new Alert(Alert.AlertType.CONFIRMATION, "Vehicle Delete Success").show();
+                                return;
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return;
+            });
         }
     }
 
-    private void clearField(){
+    private void clearField() {
         txtVehicleNo.clear();
         cmbVehicleType.setId("");
         txtRunning.clear();

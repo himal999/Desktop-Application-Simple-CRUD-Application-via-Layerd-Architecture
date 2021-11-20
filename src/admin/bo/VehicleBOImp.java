@@ -7,7 +7,7 @@ import admin.dto.Vehicle;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class VehicleBOImp implements VehicleBO{
+public class VehicleBOImp implements VehicleBO {
 
     VehicleDAO vehicleDAO = new VehicleDAOImp();
 
@@ -19,18 +19,19 @@ public class VehicleBOImp implements VehicleBO{
 
     @Override
     public boolean updateVehicle(Vehicle vehicle) throws SQLException, ClassNotFoundException {
-       return vehicleDAO.updateVehicle(vehicle);
+        return vehicleDAO.updateVehicle(vehicle);
 
     }
 
     @Override
-    public boolean deleteVehicle(String id) {
-        return false;
+    public boolean deleteVehicle(String id) throws SQLException, ClassNotFoundException {
+        return vehicleDAO.deleteVehicle(id);
+
     }
 
     @Override
     public ArrayList<Vehicle> getAllVehicle() throws SQLException, ClassNotFoundException {
-       return vehicleDAO.getAllVehicle();
+        return vehicleDAO.getAllVehicle();
     }
 
     @Override

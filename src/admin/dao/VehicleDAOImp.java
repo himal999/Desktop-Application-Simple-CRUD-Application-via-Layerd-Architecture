@@ -20,8 +20,9 @@ public class VehicleDAOImp implements VehicleDAO {
     }
 
     @Override
-    public boolean deleteVehicle(String id) {
-        return false;
+    public boolean deleteVehicle(String id) throws SQLException, ClassNotFoundException {
+        return CrudUtil.getExecuteUpdate("DELETE FROM vehicale WHERE v_no=?",id);
+
     }
 
     @Override

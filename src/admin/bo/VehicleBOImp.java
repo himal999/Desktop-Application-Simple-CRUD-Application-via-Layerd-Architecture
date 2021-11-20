@@ -28,7 +28,7 @@ public class VehicleBOImp implements VehicleBO{
     }
 
     @Override
-    public ArrayList<Vehicle> getAllVehicle() {
-        return null;
+    public ArrayList<Vehicle> getAllVehicle() throws SQLException, ClassNotFoundException {
+       return vehicleDAO.getAllVehicle();
     }
 }

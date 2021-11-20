@@ -1,7 +1,7 @@
 package admin.bo;
 
 import admin.dao.VehicleDAO;
-import admin.dao.VehicleDAOImp;
+
 import admin.dto.Vehicle;
 
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class VehicleBOImp implements VehicleBO {
 
-    VehicleDAO vehicleDAO = new VehicleDAOImp();
+    VehicleDAO vehicleDAO = BoFactory.getSingleton().getInstance(BoFactory.getType.VEHICLE);
 
     @Override
     public boolean addVehicle(Vehicle vehicle) throws SQLException, ClassNotFoundException {

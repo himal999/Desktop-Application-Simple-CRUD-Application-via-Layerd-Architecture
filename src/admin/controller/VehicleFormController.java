@@ -27,7 +27,7 @@ public class VehicleFormController {
     public JFXComboBox cmbVehicleType;
     public JFXTextField txtAccidentCount;
     public JFXButton btnDynamic;
-    private VehicleBO vehicleBO = new VehicleBOImp();
+    private VehicleBO vehicleBO = ControllerFactory.getSingleton().getInstance(ControllerFactory.getType.VEHICLE);
 
     public void initialize() throws SQLException, ClassNotFoundException {
         btnDynamic.setDisable(true);
@@ -138,7 +138,7 @@ public class VehicleFormController {
                 txtVehicleNo.setEditable(false);
                 txtVehicleNo.setText(vehicle.getVehicleNo());
                 cmbVehicleType.setDisable(false);
-                cmbVehicleType.setId(vehicle.getVehicleType());
+                cmbVehicleType.getItems().add(vehicle.getVehicleType());
                 txtAccidentCount.setDisable(false);
                 txtAccidentCount.setText(String.valueOf(vehicle.getAccidentCount()));
                 txtRunning.setDisable(false);
